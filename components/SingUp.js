@@ -1,35 +1,44 @@
-import React from "react";
-import { StyleSheet, Text, View, TextInput, Button } from "react-native";
+import React, {useState, useEffect } from "react";
+import { StyleSheet, Text, View, TextInput, Button, Alert } from "react-native";
 import "./firebaseConfig";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { useNavigation } from '@react-navigation/native';
 
 
 
 function SingUp() {
-  const [email, onChangeEmail] = React.useState("");
+  const [email, setEmail] = useState("");
   const [password, onChangePassword] = React.useState("");
+  const navigation = useNavigation();
 
   const auth = getAuth();
   const createUser = () => {
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
-        onChangeLoggedInUser(user.email);
+        Alert.alert("User created successfully");
+        // navigation.pop(); // Comenta o elimina esta línea
+        console.log(user);
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        console.log(errorCode);
+        console.log(`Error Code: ${errorCode}`);
+        console.log(`${errorMessage}`);
+        
+        if(errorCode){
+            const shortErrorCode = errorCode.split('/')[1];
+            Alert.alert(`Error : ${shortErrorCode}`);
+        }
       });
   };
-
 
   return (
     <View style={styles.container}>
       <Text>Email</Text>
       <TextInput
         style={styles.input}
-        onChangeText={onChangeEmail}
+        onChangeText={setEmail}
         value={email}
       ></TextInput>
       <Text>Password</Text>
@@ -39,7 +48,7 @@ function SingUp() {
         value={password}
         secureTextEntry={true}
       ></TextInput>
-    <Button title="Sign Up!" onPress={() => createUser()} />
+      <Button title="Sign Up!" onPress={() => createUser()} />
     </View>
   );
 }

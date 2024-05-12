@@ -1,28 +1,32 @@
-import React from "react";
-import { StyleSheet, Text, View, TextInput, Button } from "react-native";
+import React, {useEffect } from "react";
+import { StyleSheet, Text, View, TextInput, Button, Alert } from "react-native";
 import "./firebaseConfig";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signOut , signInWithEmailAndPassword } from "firebase/auth";
+import { useNavigation } from '@react-navigation/native';
+
+
 
 function Login() {
   const [email, onChangeEmail] = React.useState("");
   const [password, onChangePassword] = React.useState("");
   const [user, setUser] = React.useState(null);
-
+  const navigation = useNavigation();
   const auth = getAuth();
 
-  // Escucha los cambios en el estado de autenticación del usuario
-  auth.onAuthStateChanged((user) => {
-    if (user) {
-      // El usuario está autenticado
-      console.log("Usuario autenticado: ", user.email);
-      setUser(user);
-      return;
-    } else {
-      // El usuario no está autenticado
-      console.log("No hay ningún usuario autenticado");
-      setUser(null);
-    }
-  });
+
+  const logout = () => {
+    signOut(auth)
+      .then(() => {
+        console.log("Usuario cerró sesión exitosamente");
+      })
+      .catch((error) => {
+        console.log("Error al cerrar sesión: ", error);
+      });
+  };
+  // Agrega este efecto de montaje para llamar a logout cuando el componente se monta
+  useEffect(() => {
+    logout();
+  }, []);  
 
   const login = () => {
     signInWithEmailAndPassword(auth, email, password)
@@ -31,11 +35,13 @@ function Login() {
         const user = userCredential.user;
         onChangeEmail("");
         onChangePassword("");
+        navigation.navigate('Home', { userId: user.uid }); // Pasa el ID del usuario
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
         console.log(errorCode);
+        Alert();
       });
   };
 
@@ -55,6 +61,9 @@ function Login() {
         secureTextEntry={true}
       ></TextInput>
       <Button title="Login!" onPress={() => login()} />
+      <View>
+        <Button title="You don´t have account? create one " onPress={() => navigation.navigate("Sing Up")} />
+      </View>
     </View>
   );
 }
