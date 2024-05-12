@@ -44,7 +44,7 @@ const CreateStudent = ({route}) => {
             ...student
         })
         Alert.alert("Contact Student create");
-        navigation.goBack();
+        navigation.navigate('Contact Students List',{ userId: route.params.userId });
     }catch(error){
         console.error(error);
     }
@@ -108,7 +108,7 @@ const CreateStudent = ({route}) => {
      >
         <TextInput
             placeholder='Student Name'
-            maxLength={20}
+            maxLength={35}
             onChangeText={(value) => handleChangeText(value, 'nameStudent')}
             
         />

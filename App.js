@@ -4,12 +4,13 @@ import SingUp from './components/SingUp';
 import Login from './components/Login';
 import Home from './components/Home';
 import ContactListStudents from "./components/Libros/ContactListStudents";
-
+import CreateStudent from './components/Libros/CreateStudent';
+import ShowContactStudents from './components/Libros/ShowContactStudents';
 //navegacion
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useNavigation } from '@react-navigation/native';
-import CreateStudent from './components/Libros/CreateStudent';
+
 
 
 export default function App() {
@@ -28,7 +29,7 @@ export default function App() {
       />
       <Stack.Screen name='Create Student' component={CreateStudent} />
       <Stack.Screen name='Contact Students List' component={ContactListStudents} />
-      
+      <Stack.Screen name='Contact Student data' component={ShowContactStudents} />
     </Stack.Navigator>
   </NavigationContainer>
   );
