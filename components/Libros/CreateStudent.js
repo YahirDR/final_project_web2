@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, TextInput, Text, Button, StyleSheet, Picker, Image, Alert  } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+//Firebase
 import firebaseConfig from '../firebaseConfig';
 import { collection, addDoc, getFirestore} from 'firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
@@ -10,7 +11,6 @@ import { useNavigation } from '@react-navigation/native';
 const db =getFirestore(firebaseConfig);
 
 const CreateStudent = ({route}) => {
-  const [refresh, setRefresh] = useState(false);
 
   const [selectImage, setSelectImage] = useState(null);
   const navigation = useNavigation();
@@ -99,7 +99,7 @@ const CreateStudent = ({route}) => {
   
   return (
     <View style={styles.container}>
-      <Text>Student Info.</Text>
+      <Text style={styles.TextTitle}>Create a Student Contact.</Text>
 
 
      {/*Nombre*/}
@@ -181,7 +181,13 @@ const styles = StyleSheet.create({
     borderBottomWidth:3,
     borderBottomColor: "#cccccc"
   },
-
+  TextTitle:{
+    color: 'black',
+    fontFamily: 'sans-serif-medium',
+    fontSize: 18,
+    textAlign: 'center',
+    marginBottom: 40
+  },
   image: {
     height:250,
     width: 250,

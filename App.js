@@ -9,12 +9,14 @@ import ShowContactStudents from './components/Libros/ShowContactStudents';
 //navegacion
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { useNavigation } from '@react-navigation/native';
-
+import ContactListTeacher from './components/teacher/ContactListTeacher';
+import CreateTeacher from './components/teacher/CreateTeacher';
 
 
 export default function App() {
   const Stack = createNativeStackNavigator();
+
+  
   return (
   <NavigationContainer>
     <Stack.Navigator
@@ -30,6 +32,9 @@ export default function App() {
       <Stack.Screen name='Create Student' component={CreateStudent} />
       <Stack.Screen name='Contact Students List' component={ContactListStudents} />
       <Stack.Screen name='Contact Student data' component={ShowContactStudents} />
+      {/*TEACHER NAVIGATE*/}
+      <Stack.Screen name='Create Teacher' component={CreateTeacher} />
+      <Stack.Screen name='Contact teacher List' component={ContactListTeacher} />
     </Stack.Navigator>
   </NavigationContainer>
   );

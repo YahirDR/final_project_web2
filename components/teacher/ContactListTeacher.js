@@ -7,28 +7,29 @@ import { getFirestore, collection, addDoc, getDocs, doc, deleteDoc, setDoc, onSn
 
 const db =getFirestore(firebaseConfig);
 
-
-const ContactListStudents = ({route})=>{
+const ContactListTeacher = ({route}) =>{
     const navigation = useNavigation();
     const [list, setListCST] = useState([]);
     const idTeacherUser = route.params.userId;
-    const [al, setAl] = useState([]);
+    const imageStudentIcon = require('../../assets/icon_contact_student.png'); // Ruta de la imagen predeterminada en la carpeta assets
 
     const getList = () => {
         try {
-            const suscribe = onSnapshot(collection(db, 'Students'), (snapshot) => {
+            const suscribe = onSnapshot(collection(db, 'Teachers'), (snapshot) => {
                 const docs = [];
                 snapshot.forEach((doc) => {
-                    const { Age, idTeacher, nameStudent, phone, recidence, university } = doc.data();
+                    const { Age, idTeacher, nameTeacher, phone, recidence, school, email, courses } = doc.data();
                     if (idTeacher === idTeacherUser) {
                         docs.push({
                             id: doc.id,
                             Age,
                             idTeacher,
-                            nameStudent,
+                            nameTeacher,
                             phone,
                             recidence,
-                            university
+                            school,
+                            email,
+                            courses
                         });
                     }
                 });
@@ -41,25 +42,24 @@ const ContactListStudents = ({route})=>{
             console.log(error)
         }
     }
-    
     useEffect(() => {
         const suscribe = getList();
     
         // Limpia la suscripción cuando el componente se desmonte
         return () => suscribe();
     }, []);
-    const imageStudentIcon = require('../../assets/icon_contact_student.png'); // Ruta de la imagen predeterminada en la carpeta assets
+
+    
 
     return(
         <ScrollView
             style={styles.containerMain}
             stickyHeaderIndices={[0]} // Esto asegura que el botón siempre esté visible en la parte superior
-
         >
             <View>
-                <Button title="Create a new Student Contact"
+                <Button title="Create a new teacher Contact"
                     color='blue'
-                    onPress={() => navigation.navigate('Create Student', { userId: route.params.userId })}
+                    onPress={() => navigation.navigate('Create Teacher', { userId: route.params.userId })}
                 />
             </View>
             <View>
@@ -81,7 +81,7 @@ const ContactListStudents = ({route})=>{
                                     style={styles.textNormal}
                                 >
                                     Student name: {' '}
-                                    {item.nameStudent}
+                                    {item.nameTeacher}
                                 </Text>
                                 <Text
                                     style={styles.textNormal}
@@ -99,7 +99,7 @@ const ContactListStudents = ({route})=>{
                                     style={styles.textNormal}
                                 >
                                     School : {' '}
-                                    {item.university}
+                                    {item.school}
                                 </Text>
                                 <Text 
                                 style={styles.textNormal}
@@ -107,16 +107,25 @@ const ContactListStudents = ({route})=>{
                                     Residence: {' '}
                                     {item.recidence}
                                 </Text>
+                                <Text 
+                                style={styles.textNormal}
+                                >
+                                    Email: {' '}
+                                    {item.email}
+                                </Text>
+                                <Text 
+                                style={styles.textNormal}
+                                >
+                                    Courses: {' '}
+                                    {item.courses}
+                                </Text>
                             </View>
                         </TouchableOpacity>
                     ))
                 }
             </View>
-            
         </ScrollView>
-        
     );
-    
 }
 
 
@@ -168,4 +177,5 @@ const styles = StyleSheet.create({
     }
 });
 
-export default ContactListStudents;
+
+export default ContactListTeacher;

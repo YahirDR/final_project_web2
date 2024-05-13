@@ -1,6 +1,7 @@
 import React, {useState} from "react";
 import { View, Text, Button, Alert } from "react-native";
 import { useNavigation } from '@react-navigation/native';
+
 //firebase
 import "./firebaseConfig";
 import { getAuth, signOut} from "firebase/auth";
@@ -28,12 +29,11 @@ const Home = ({route})=>{
         >
             <Text>HOME </Text>
             <Text>{route.params.userId}</Text>
-            <Button title="Create a new Student Contact"
-                color='blue'
-                onPress={ () => navigation.navigate('Create Student',{ userId: route.params.userId })}
-            />
             <Button title="Contacs Students"
                 onPress={ () => navigation.navigate('Contact Students List',{ userId: route.params.userId })}
+            />
+            <Button title="Contacs Teachers"
+                onPress={ () => navigation.navigate('Contact teacher List',{ userId: route.params.userId })}
             />
             <Button title="Exit"
                 color='red'
