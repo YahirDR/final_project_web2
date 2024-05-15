@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, Text, Button, StyleSheet, Picker, Image, Alert  } from 'react-native';
+import { View, TextInput, Text, Button, StyleSheet, Picker, Image, Alert, Platform  } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 //Firebase
 import firebaseConfig from '../firebaseConfig';
@@ -9,8 +9,14 @@ const db =getFirestore(firebaseConfig);
 
 const CreateTeacher = ({route})=>{
 
-    const navigation = useNavigation();
-
+  const navigation = useNavigation();
+  const showAlert = (message) => {
+    if (Platform.OS === 'web') {
+        alert(message);
+    } else {
+        Alert.alert(message);
+    }
+  };
   //Crear teacher
   const onSend = async()=>{
     if (!teacher.nameStudent && !teacher.Age && !teacher.school && !teacher.recidence && !teacher.phone
@@ -22,34 +28,58 @@ const CreateTeacher = ({route})=>{
 
     switch (true) {
         case !teacher.nameTeacher:
-            Alert.alert("It´s require a name.");
+            showAlert("It´s require a name.");
             return;
         case !teacher.Age:
-            Alert.alert("It´s require an age.");
+            showAlert("It´s require an age.");
             return;
         case !teacher.recidence:
-            Alert.alert("It´s require a recidence.");
+            showAlert("It´s require a recidence.");
             return;
         case !teacher.phone:
-            Alert.alert("It´s require a phone number.");
+            showAlert("It´s require a phone number.");
             return;
         case !teacher.email:
-            Alert.alert("It´s require a email.");
+            showAlert("It´s require a email.");
             return;
         case !teacher.courses:
-            Alert.alert("It´s require a course(s).");
+            showAlert("It´s require a course(s).");
+            return;
+        case !teacher.school:
+            showAlert("It´s require a school.");
             return;
       default:
         break;
     }
+    //VALIDAR CORREO
+    const emailRegex = /^[\w-]+(\.[\w-]+)*@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*(\.[a-zA-Z]{2,})$/;
+    const phonoRegex = /^[0-9]+$/;
+    // Verificar si el correo electrónico coincide con el formato regex
+    if (!emailRegex.test(teacher.email)) {
+          showAlert('Email not validate !');
+          return;
+    }
+    if (!phonoRegex.test(teacher.phone)) {
+      showAlert('Phone number must be numeric!');
+      return;
+    }
+    if (!phonoRegex.test(teacher.Age)) {
+      showAlert('Age must be numeric!');
+      return;
+    }
+    // Validar la longitud del número de teléfono
+    if (teacher.phone.length !== 10) {
+        showAlert("Phone number must be 10 characters long.");
+        return;
+    } 
     try{
         await addDoc(collection(db, "Teachers"),{
             ...teacher
         })
-        Alert.alert("Contact Teacher create");
+          showAlert("Contact Teacher create");
         navigation.navigate('Contact teacher List',{ userId: route.params.userId });
     }catch(error){
-        console.error(error);
+        showAlert(error);
     }
   }
 
@@ -72,7 +102,11 @@ const CreateTeacher = ({route})=>{
 
     return (
         <View style={styles.container}>
-          <Text>Create a Teacher Contac.</Text>
+          <Text
+            style={styles.TextTitle}
+          >
+            Create a Teacher Contac:
+          </Text>
     
     
          {/*Nombre*/}
@@ -104,7 +138,7 @@ const CreateTeacher = ({route})=>{
          >
             <TextInput 
                 placeholder='School where impart courses '
-                maxLength={30}
+                maxLength={65}
                 onChangeText={(value) => handleChangeText(value, 'school')}
               
             />
@@ -132,13 +166,13 @@ const CreateTeacher = ({route})=>{
               
             />
          </View>
-          {/*Recidencia*/}
+          {/*MATERIAS QUE IMPARTE*/}
          <View
           style={styles.input}
          >
             <TextInput 
                 placeholder='Courses he taught'
-                maxLength={30}
+                maxLength={50}
                 onChangeText={(value) => handleChangeText(value, 'courses')}
               
             />
@@ -148,7 +182,7 @@ const CreateTeacher = ({route})=>{
          >
             <TextInput 
                 placeholder='Email'
-                maxLength={30}
+                maxLength={50}
                 onChangeText={(value) => handleChangeText(value, 'email')}
               
             />

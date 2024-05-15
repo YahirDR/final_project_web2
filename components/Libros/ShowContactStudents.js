@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, TextInput, Text, Button, StyleSheet, Picker, Image, Alert  } from 'react-native';
+import { View, TextInput, Text, Button, StyleSheet, Picker, Image, Alert, Platform  } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 //FIREBASE
 import firebaseConfig from '../../firebaseConnection/firebaseConfig';
@@ -40,49 +40,96 @@ const ShowContactStudents = ({route }) =>{
 
     const update = async () => {
         if (!contactStudent.nameStudent && !contactStudent.Age && !contactStudent.controlNumber && !contactStudent.university && !contactStudent.recidence) {
-            Alert.alert("It´s necesary fill all the fields");
+            showAlert("It´s necesary fill all the fields");
             return;
         }
         switch (true) {
             case !contactStudent.nameStudent:
-              Alert.alert("It´s require a name.");
+                showAlert("It´s require a name.");
               return;
             case !contactStudent.Age:
-              Alert.alert("It´s require an age.");
+                showAlert("It´s require an age.");
               return;
             case !contactStudent.university:
-              Alert.alert("It´s require an school.");
+                showAlert("It´s require an school.");
               return;
             case !contactStudent.recidence:
-              Alert.alert("It´s require a recidence.");
+                showAlert("It´s require a recidence.");
               return;
             case !contactStudent.phone:
-              Alert.alert("It´s require a phono number.");
+                showAlert("It´s require a phono number.");
               return;
             default:
               break;
         }
+        const phonoRegex = /^[0-9]+$/;
 
+        if (!phonoRegex.test(contactStudent.phone)) {
+          showAlert('Phone number must be numeric!');
+          return;
+        }
+        if (!phonoRegex.test(contactStudent.Age)) {
+          showAlert('Age number must be numeric!');
+          return;
+        }
+        // Validar la longitud del número de teléfono
+        if (contactStudent.phone.length !== 10) {
+            showAlert("Phone number must be 10 characters long.");
+            return;
+        } 
         try {
             const docRef = doc(db, 'Students', route.params.studentId);
             await setDoc(docRef, contactStudent);
-            Alert.alert("Student update successfully");
+            showAlert("Student update successfully");
             navigation.goBack();
             // Si necesitas hacer algo después de la actualización, puedes hacerlo aquí, como navegar a otra pantalla.
             // navigation.navigate('OtraPantalla');
         } catch (error) {
-            console.log(error);
+            showAlert(error);
+        }
+    };
+    const showAlert = (message) => {
+        if (Platform.OS === 'web') {
+            alert(message);
+        } else {
+            Alert.alert(message);
         }
     };
 
     const Delete = async () => {
+        if (Platform.OS === 'android') {
+            // En Android, llama a la función Delete
+            DeleteAndroid();
+        } else {
+            // En otras plataformas (como web), llama a la función DeleteWeb
+            DeleteWeb();
+        }
+    };
+    
+    const DeleteWeb = async () => {
+        const confirmed = window.confirm("Are you sure you want to delete this student?");
+        if (confirmed) {
+            try {
+                const docRef = doc(db, 'Students', route.params.studentId);
+                await deleteDoc(docRef);
+                window.alert("Student deleted successfully");
+                navigation.goBack();
+            } catch (error) {
+                window.alert("An error occurred while deleting the student: " + error);
+            }
+        } else {
+            window.alert("Deletion canceled");
+        }
+    };
+    
+    const DeleteAndroid = async () => {
         Alert.alert(
             "Delete Student",
             "Are you sure you want to delete this student?",
             [
                 {
                     text: "Cancel",
-                    onPress: () => Alert.alert("Cancel"),
+                    onPress: () => showAlert("Cancel"),
                     style: "cancel"
                 },
                 {
@@ -91,17 +138,18 @@ const ShowContactStudents = ({route }) =>{
                         try {
                             const docRef = doc(db, 'Students', route.params.studentId);
                             await deleteDoc(docRef);
-                            Alert.alert("Student deleted successfully");
+                            showAlert("Student deleted successfully");
                             navigation.goBack();
                         } catch (error) {
-                            console.log(error);
+                            showAlert(error);
                         }
                     }
                 }
             ],
             { cancelable: false }
         );
-    }
+    };
+
 
     return (
         <View style={styles.container}>
@@ -160,7 +208,7 @@ const ShowContactStudents = ({route }) =>{
             <View>
                 <Button
                     color='#007bff'
-                    title='Update'
+                    title='Update Contact Student'
                     onPress={update}
                 />
             </View>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, TextInput, Text, Button, StyleSheet, Picker, Image, Alert  } from 'react-native';
+import { View, TextInput, Text, Button, StyleSheet, Picker, Image, Alert, Platform   } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 //Firebase
 import firebaseConfig from '../firebaseConfig';
@@ -15,41 +15,64 @@ const CreateStudent = ({route}) => {
   const [selectImage, setSelectImage] = useState(null);
   const navigation = useNavigation();
 
-
+  
   //Crear estudiante
   const onSend = async()=>{
     if (!student.nameStudent && !student.Age && !student.controlNumber && !student.university && !student.recidence) {
-      Alert.alert("It´s necesary fill all the fields");
+      showAlert("It´s necesary fill all the fields");
       return;
     }
 
     switch (true) {
       case !student.nameStudent:
-        Alert.alert("It´s require a name.");
+        showAlert("It´s require a name.");
         return;
       case !student.Age:
-        Alert.alert("It´s require an age.");
+        showAlert("It´s require an age.");
         return;
       case !student.university:
-        Alert.alert("It´s require an school.");
+        showAlert("It´s require an school.");
         return;
       case !student.recidence:
-        Alert.alert("It´s require a recidence.");
+        showAlert("It´s require a recidence.");
         return;
       default:
         break;
     }
+
+    const phonoRegex = /^[0-9]+$/;
+
+    if (!phonoRegex.test(student.phone)) {
+      showAlert('Phone number must be numeric!');
+      return;
+    }
+    if (!phonoRegex.test(student.Age)) {
+      showAlert('Age number must be numeric!');
+      return;
+    }
+    // Validar la longitud del número de teléfono
+    if (student.phone.length !== 10) {
+        showAlert("Phone number must be 10 characters long.");
+        return;
+    } 
     try{
         await addDoc(collection(db, "Students"),{
             ...student
         })
-        Alert.alert("Contact Student create");
+        showAlert("Contact Student create");
         navigation.navigate('Contact Students List',{ userId: route.params.userId });
     }catch(error){
         console.error(error);
     }
   }
-
+    // Mostrar alerta dependiendo de la plataforma
+  const showAlert = (message) => {
+      if (Platform.OS === 'web') {
+          alert(message);
+      } else {
+          Alert.alert(message);
+      }
+  };
 
   //Metodo para guardar una imagen y solicitar permisos
   let openImage = async () =>{
