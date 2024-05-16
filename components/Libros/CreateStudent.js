@@ -142,7 +142,7 @@ const CreateStudent = ({route}) => {
      >
         <TextInput 
             placeholder='Age'
-            maxLength={3}
+            maxLength={2}
             keyboardType='numeric'
             onChangeText={(value) => handleChangeText(value, 'Age')}
             
