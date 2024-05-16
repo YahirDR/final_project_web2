@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { View, TextInput, Text, Button, StyleSheet, Picker, Image, Alert, Platform  } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+
 //Firebase
 import firebaseConfig from '../firebaseConfig';
 import { collection, addDoc, getFirestore} from 'firebase/firestore';
@@ -101,7 +103,10 @@ const CreateTeacher = ({route})=>{
       };
 
     return (
-        <View style={styles.container}>
+        <KeyboardAwareScrollView 
+        behavior={{padding : 'height'}}
+        style={styles.container}
+        >
           <Text
             style={styles.TextTitle}
           >
@@ -194,7 +199,7 @@ const CreateTeacher = ({route})=>{
             />
          </View>
     
-        </View>
+        </KeyboardAwareScrollView>
       );
 }
 
@@ -203,6 +208,7 @@ const styles = StyleSheet.create({
       flex: 1,
       backgroundColor: "#fff",
       padding:35
+      
     },
     input: {
       marginBottom:30,

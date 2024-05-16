@@ -1,5 +1,5 @@
 import React, {useEffect } from "react";
-import { StyleSheet, Text, View, TextInput, Button, Alert, Platform, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, TextInput, Button, Alert, Platform, TouchableOpacity, ScrollView } from "react-native";
 import "./firebaseConfig";
 import { getAuth, signOut , signInWithEmailAndPassword } from "firebase/auth";
 import { useNavigation } from '@react-navigation/native';

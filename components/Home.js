@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, Alert, Platform, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, Alert, Platform, StyleSheet, ScrollView } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 
 //firebase
@@ -31,7 +31,7 @@ const Home = ({ route }) => {
         }
     };
     return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
             <View  style={styles.content}>
                 <Text style={styles.title}>Welcome to our Academic Contacts Project!</Text>
                 <Text style={styles.description}>
@@ -57,7 +57,7 @@ const Home = ({ route }) => {
                     <Text style={styles.buttonText}>Exit</Text>
                 </TouchableOpacity>
             </View>
-        </View>
+        </ScrollView>
     );
 }
 
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#EBDBD4',
         borderRadius: 70, // Radio de los bordes
         padding: 30, // Espaciado interno para el contenido
-        marginTop: 80
+        marginTop: 5
     },
     container: {
         flex: 1,
