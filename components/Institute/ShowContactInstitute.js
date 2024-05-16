@@ -143,7 +143,7 @@ const ShowContactInstitute = ({route}) =>{
                         try {
                             const docRef = doc(db, 'Institutes', route.params.studentId);
                             await deleteDoc(docRef);
-                            showAlert("Teacher deleted successfully");
+                            showAlert("Institute deleted successfully");
                             navigation.goBack();
                         } catch (error) {
                             showAlert(error);

@@ -40,7 +40,7 @@ const ShowContactTeacher =({route})=>{
         if (!contact.nameTeacher && !contact.Age && !contact.school && !contact.recidence && !contact.phone
             && !contact.email && !contact.courses
         ) {
-          Alert.alert("It´s necesary fill all the fields");
+            showAlert("It´s necesary fill all the fields");
           return;
         }
     
@@ -77,7 +77,7 @@ const ShowContactTeacher =({route})=>{
                 showAlert('Email not validate !');
                 return;
         }
-        if (!phonoRegex.test(teacher.Age)) {
+        if (!phonoRegex.test(contact.Age)) {
             showAlert('Age number must be numeric!');
             return;
         }
